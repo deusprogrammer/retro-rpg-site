@@ -1,0 +1,23 @@
+body {
+}
+
+a {
+}
+
+a:hover {
+}
+
+div {
+}
+
+div#content {
+}
+
+div#nav-bar {
+}
+
+div#side-menu {
+}
+
+canvas#graphics-surface {
+}

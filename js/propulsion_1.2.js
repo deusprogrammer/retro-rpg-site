@@ -964,6 +964,7 @@ var PP = {
 	
 	load: (function() {	
 		var loadAudio = function() {
+			console.log("In load()");
 			var imgArray = PP.load.spritesList,
 				audio = PP.load.soundList;
 			
@@ -988,9 +989,6 @@ var PP = {
 				var canplaythroughListener = function() {
 					// Make sure it doesn't fire again...
 					thisAud.removeEventListener('canplaythrough',canplaythroughListener,true);
-					
-					console.log("Something went wrong loading audio! (canplaythrough)");
-					
 					finished();
 				};
 				
@@ -1000,9 +998,6 @@ var PP = {
 				var errorListener = function() {
 					// Make sure it doesn't fire again...
 					thisAud.removeEventListener('error',errorListener,true);
-					
-					console.log("Something went wrong loading audio! (error)");
-					
 					finished();
 				};
 				

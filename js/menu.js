@@ -5,53 +5,168 @@ function Frame(frameName, x, y, width, height) {
    this.y           = y;
    this.width       = width;
    this.height      = height;
+   
    this.padding     = {left: 0, top: 0, right: 0, bottom: 0};
-   this.margin      = 0;
-   this.background  = {color: "blue"};
+   this.margin      = {left: 0, top: 0, right: 0, bottom: 0};
+   
+   this.background  = {color: "blue", image: "", type: "color"};
    this.border      = {color: "gray", width: 2};
+   
+   this.parent      = null;
    this.children    = [];
+   this.activeChild = null;
+   
+   this.artist      = null;
    
    this.addChild = function(child) {
-      child.x += this.x + this.border.width;
-      child.y += this.y + this.border.width;
+      //child.x += this.x + this.border.width;
+      //child.y += this.y + this.border.width;
+      child.parent = this;
       this.children.push(child);
    };
    
-   this.setDepth = function() {
-   }
+   this.getOffset = function() {
+      var offset = {x: 0, y: 0}
+      if (this.parent) {
+         offset = this.parent.getOffset();
+      }
+      
+      offset.x += this.x;
+      offset.y += this.y;
+      
+      return offset;
+   };
+   
+   this.getArtist = function() {
+      if (!this.artist && this.parent) {
+         return this.parent.getArtist();
+      } else {
+         return this.artist;
+      }
+   };
+   
+   this.getActiveChild = function() {
+      if (!this.activeChild) {
+         return null;
+      }
+      else {
+         var activeChild = this.activeChild.getActiveChild()
+         if (!activeChild) {
+            return this.activeChild;
+         }
+         else {
+            return null;
+         }
+      }
+   };
+   
+   this.draw = function() {
+      var absolute = this.getOffset();
+      var artist   = this.getArtist();
+      
+      if (this.type == "frame") {
+         artist.drawRectangle(absolute.x, absolute.y, this.width, this.height, this.border.color);
+         artist.drawRectangle(absolute.x + this.border.width, absolute.y + this.border.width, this.width - (this.border.width * 2), this.height - (this.border.width * 2), this.background.color);
+      } else if (this.type == "menu") {
+      } else {
+         artist.drawText(absolute.x + this.padding.left, absolute.y + (this.index * 20) + this.padding.top, {size: "12px", family: "Georgia", color: "white"}, {h: "left", v: "middle"}, this.itemText);
+      }
+      
+      for (var i = 0; i < this.children.length; i++) {
+         this.children[i].draw();
+      }
+   };
    
    this.setPadding = function(padding_left, padding_top, padding_right, padding_bottom) {
       padding.left   = padding_left;
       padding.top    = padding_top;
       padding.right  = padding_right;
       padding.bottom = padding_bottom;
-   }
+   };
    
    this.setPadding = function(padding) {
       padding.left = padding.right = padding.top = padding.bottom = padding;
-   }
+   };
 }
 
-function Menu(menuName, callback) {
+function Menu(menuName) {
    this.elementName  = menuName;
    this.type         = "menu";
    this.x            = 0;
    this.y            = 0;
    this.width        = 0;
    this.height       = 0;
+   
    this.padding      = {left: 0, top: 0, right: 0, bottom: 0};
-   this.margin       = 0;
-   this.background  = {color: "blue"};
+   this.margin       = {left: 0, top: 0, right: 0, bottom: 0};
+   
+   this.background   = {color: "none", image: "", type: "none"};
+
+   this.parent       = null;   
+   this.children     = [];
+   this.activeChild  = null;
+   
    this.cursor       = 0;
    this.nChildren    = 0;
-   this.children     = [];
-   this.callback     = callback;
+   
+   this.artist       = null;
    
    this.addChild = function(child) {
-      child.x += this.x;
-      child.y += this.y;
+      child.parent = this;
+      child.index = this.nChildren++;
       this.children.push(child);
-      this.nChildren++;
+   };
+   
+   this.getOffset = function() {
+      var offset = {x: 0, y: 0}
+      if (this.parent) {
+         offset = this.parent.getOffset();
+      }
+      
+      offset.x += this.x;
+      offset.y += this.y;
+      
+      return offset;
+   };
+   
+   this.getArtist = function() {
+      if (!this.artist && this.parent) {
+         return this.parent.getArtist();
+      } else {
+         return this.artist;
+      }
+   };
+   
+   this.getActiveChild = function() {
+      if (!this.activeChild) {
+         return null;
+      }
+      else {
+         var activeChild = this.activeChild.getActiveChild()
+         if (!activeChild) {
+            return this.activeChild;
+         }
+         else {
+            return null;
+         }
+      }
+   };
+   
+   this.draw = function() {
+      var absolute = this.getOffset();
+      var artist   = this.getArtist();
+      
+      if (this.type == "frame") {
+         artist.drawRectangle(absolute.x, absolute.y, this.width, this.height, this.border.color);
+         artist.drawRectangle(absolute.x + this.border.width, absolute.y + this.border.width, this.width - (this.border.width * 2), this.height - (this.border.width * 2), this.background.color);
+      } else if (this.type == "menu") {
+      } else {
+         artist.drawText(absolute.x + this.padding.left, absolute.y + (this.index * 20) + this.padding.top, {size: "12px", family: "Georgia", color: "white"}, {h: "left", v: "middle"}, this.itemText);
+      }
+      
+      for (var i = 0; i < this.children.length; i++) {
+         this.children[i].draw();
+      }
    };
   
    this.setPadding = function(padding_left, padding_top, padding_right, padding_bottom) {
@@ -59,11 +174,11 @@ function Menu(menuName, callback) {
       padding.top    = padding_top;
       padding.right  = padding_right;
       padding.bottom = padding_bottom;
-   }
+   };
    
    this.setPadding = function(padding) {
       padding.left = padding.right = padding.top = padding.bottom = padding;
-   }
+   };
    
    this.getSelected = function() {
       return children[this.cursor];
@@ -85,7 +200,8 @@ function Menu(menuName, callback) {
       return this;
    };
    
-   this.getCursorPosition = function() {
+   this.getCursorCoordinates = function() {
+      return {x: 0, y: 0};
    };
 }
 
@@ -93,25 +209,87 @@ function MenuItem(itemName, itemText, callback) {
    this.elementName = itemName;
    this.type        = "menuItem";
    this.itemText    = itemText;
+   
    this.x           = 0;
    this.y           = 0;
    this.width       = 0;
    this.height      = 0;
-   this.background  = {color: "blue"};
-   this.text        = {color: "white"};
+   
    this.padding     = {left: 0, top: 0, right: 0, bottom: 0};
+   this.margin      = {left: 0, top: 0, right: 0, bottom: 0};
+   
+   this.background  = {color: "none", image: "", type: "none"};
+   this.text        = {color: "white", fontFamily: "georgia", fontSize: 12};
+      
+   this.parent       = null;   
+   this.children     = [];
+   this.activeChild  = null;
+   
    this.callback    = callback;
-   this.parent      = null;
-   this.children    = {};
+   this.index       = 0;
+   
+   this.artist      = null;
+   
+   this.getOffset = function() {
+      var offset = {x: 0, y: 0}
+      if (this.parent) {
+         offset = this.parent.getOffset();
+      }
+      
+      offset.x += this.x;
+      offset.y += this.y;
+      
+      return offset;
+   };
+   
+   this.getArtist = function() {
+      if (!this.artist && this.parent) {
+         return this.parent.getArtist();
+      } else {
+         return this.artist;
+      }
+   };
+   
+   this.getActiveChild = function() {
+      if (!this.activeChild) {
+         return null;
+      }
+      else {
+         var activeChild = this.activeChild.getActiveChild()
+         if (!activeChild) {
+            return this.activeChild;
+         }
+         else {
+            return null;
+         }
+      }
+   };
+   
+   this.draw = function() {
+      var absolute = this.getOffset();
+      var artist   = this.getArtist();
+      
+      if (this.type == "frame") {
+         artist.drawRectangle(absolute.x, absolute.y, this.width, this.height, this.border.color);
+         artist.drawRectangle(absolute.x + this.border.width, absolute.y + this.border.width, this.width - (this.border.width * 2), this.height - (this.border.width * 2), this.background.color);
+      } else if (this.type == "menu") {
+      } else {
+         artist.drawText(absolute.x + this.padding.left, absolute.y + (this.index * 20) + this.padding.top, {size: "12px", family: "Georgia", color: "white"}, {h: "left", v: "middle"}, this.itemText);
+      }
+      
+      for (var i = 0; i < this.children.length; i++) {
+         this.children[i].draw();
+      }
+   };
    
    this.setPadding = function(padding_left, padding_top, padding_right, padding_bottom) {
       padding.left   = padding_left;
       padding.top    = padding_top;
       padding.right  = padding_right;
       padding.bottom = padding_bottom;
-   }
+   };
    
    this.setPadding = function(padding) {
       padding.left = padding.right = padding.top = padding.bottom = padding;
-   }
+   };
 }

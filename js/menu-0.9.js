@@ -14,7 +14,7 @@ function Element(elementName) {
    
    this.parent      = null;
    this.children    = [];
-   this.activeChild = null;
+   this.activeMenu  = null;
    this.active      = false;
    
    this.history     = [];
@@ -48,14 +48,14 @@ function Element(elementName) {
       }
    };
    
-   this.getActiveChild = function() {
-      if (!this.activeChild) {
+   this.getActiveMenu = function() {
+      if (!this.activeMenu) {
          return null;
       }
       else {
-         var activeChild = this.activeChild.getActiveChild()
-         if (!activeChild) {
-            return this.activeChild;
+         var activeMenu = this.activeMenu.getActiveMenu()
+         if (!activeMenu) {
+            return this.activeMenu;
          }
          else {
             return null;
@@ -63,16 +63,20 @@ function Element(elementName) {
       }
    };
    
-   this.setActiveChild = function(child) {
-      if (this.activeChild) {
-         this.activeChild.active = false;
-         console.log("SETTING " + this.activeChild.elementName + " INACTIVE");
-         this.history.push(this.activeChild);
+   this.setActiveMenu = function(child, perserve) {
+      if (this.activeMenu) {
+         console.log("SETTING " + this.activeMenu.elementName + " INACTIVE AND INVISIBLE!");
+         this.activeMenu.active = false;
+         this.activeMenu.parent.visible = false;
+         if (perserve) {
+            this.history.push(this.activeMenu);
+         }
       }
    
-      this.activeChild = child;
-      child.active = true;
-      console.log("SETTING " + child.elementName + " ACTIVE");
+      this.activeMenu = child;
+      console.log("SETTING " + this.activeMenu.elementName + " ACTIVE AND VISIBLE!");
+      this.activeMenu.active = true;
+      this.activeMenu.parent.visible = true;
    }
    
    this.setPadding = function(padding_left, padding_top, padding_right, padding_bottom) {
@@ -129,7 +133,7 @@ function Frame(frameName, x, y, width, height) {
    
    this.parent      = null;
    this.children    = [];
-   this.activeChild = null;
+   this.activeMenu = null;
    this.active      = false;
    
    this.history     = [];
@@ -163,14 +167,14 @@ function Frame(frameName, x, y, width, height) {
       }
    };
    
-   this.getActiveChild = function() {
-      if (!this.activeChild) {
+   this.getActiveMenu = function() {
+      if (!this.activeMenu) {
          return null;
       }
       else {
-         var activeChild = this.activeChild.getActiveChild()
-         if (!activeChild) {
-            return this.activeChild;
+         var activeMenu = this.activeMenu.getActiveMenu()
+         if (!activeMenu) {
+            return this.activeMenu;
          }
          else {
             return null;
@@ -178,16 +182,20 @@ function Frame(frameName, x, y, width, height) {
       }
    };
    
-   this.setActiveChild = function(child) {
-      if (this.activeChild) {
-         this.activeChild.active = false;
-         this.history.push(this.activeChild);
-         console.log("SETTING " + this.activeChild.elementName + " INACTIVE");
+   this.setActiveMenu = function(child, perserve) {
+      if (this.activeMenu) {
+         console.log("SETTING " + this.activeMenu.elementName + " INACTIVE AND INVISIBLE!");
+         this.activeMenu.active = false;
+         this.activeMenu.parent.visible = false;
+         if (perserve) {
+            this.history.push(this.activeMenu);
+         }
       }
    
-      this.activeChild = child;
-      child.active = true;
-      console.log("SETTING " + child.elementName + " ACTIVE");
+      this.activeMenu = child;
+      console.log("SETTING " + this.activeMenu.elementName + " ACTIVE AND VISIBLE!");
+      this.activeMenu.active = true;
+      this.activeMenu.parent.visible = true;
    }
 
    this.setPadding = function(padding_left, padding_top, padding_right, padding_bottom) {
@@ -243,7 +251,7 @@ function Menu(menuName, cursorSprite) {
 
    this.parent       = null;   
    this.children     = [];
-   this.activeChild  = null;
+   this.activeMenu  = null;
    this.active       = false;
    
    this.history      = [];
@@ -282,32 +290,20 @@ function Menu(menuName, cursorSprite) {
       }
    };
    
-   this.getActiveChild = function() {
-      if (!this.activeChild) {
+   this.getActiveMenu = function() {
+      if (!this.activeMenu) {
          return null;
       }
       else {
-         var activeChild = this.activeChild.getActiveChild()
-         if (!activeChild) {
-            return this.activeChild;
+         var activeMenu = this.activeMenu.getActiveMenu()
+         if (!activeMenu) {
+            return this.activeMenu;
          }
          else {
             return null;
          }
       }
    };
-   
-   this.setActiveChild = function(child) {
-      if (this.activeChild) {
-         this.activeChild.active = false;
-         this.history.push(this.activeChild);
-         console.log("SETTING " + this.activeChild.elementName + " INACTIVE");
-      }
-   
-      this.activeChild = child;
-      child.active = true;
-      console.log("SETTING " + child.elementName + " ACTIVE");
-   }
    
    this.setPadding = function(padding_left, padding_top, padding_right, padding_bottom) {
       padding.left   = padding_left;
@@ -348,10 +344,8 @@ function Menu(menuName, cursorSprite) {
       var lastActive = root.history.pop();
       
       if (lastActive) {
-         this.parent.visible = false;
          console.log("LAST ACTIVE PARENT: " + lastActive.parent.elementName);
-         lastActive.parent.visible = true;
-         root.setActiveChild(lastActive);
+         root.setActiveMenu(lastActive, false);
       }
    };
    
@@ -401,7 +395,7 @@ function MenuItem(itemName, itemText, callback) {
       
    this.parent      = null;   
    this.children    = [];
-   this.activeChild = null;
+   this.activeMenu = null;
    this.active      = false;
    
    this.history     = [];
@@ -433,32 +427,20 @@ function MenuItem(itemName, itemText, callback) {
       }
    };
    
-   this.getActiveChild = function() {
-      if (!this.activeChild) {
+   this.getActiveMenu = function() {
+      if (!this.activeMenu) {
          return null;
       }
       else {
-         var activeChild = this.activeChild.getActiveChild()
-         if (!activeChild) {
-            return this.activeChild;
+         var activeMenu = this.activeMenu.getActiveMenu()
+         if (!activeMenu) {
+            return this.activeMenu;
          }
          else {
             return null;
          }
       }
    };
-   
-   this.setActiveChild = function(child) {
-      if (this.activeChild) {
-         this.activeChild.active = false;
-         this.history.push(this.activeChild);
-         console.log("SETTING " + this.activeChild.elementName + " INACTIVE");
-      }
-   
-      this.activeChild = child;
-      child.active = true;
-      console.log("SETTING " + child.elementName + " ACTIVE");
-   }
   
    this.setPadding = function(padding_left, padding_top, padding_right, padding_bottom) {
       padding.left   = padding_left;

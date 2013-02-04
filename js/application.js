@@ -162,7 +162,7 @@ owRightMenu.addChild(new MenuItem("save", "Save",
    }
 ));
 
-owFrame.setActiveChild(owRightMenu);
+owFrame.setActiveMenu(owRightMenu);
 
 //***************
 // Battle Menu
@@ -221,9 +221,7 @@ btActionMenu.addChild(new MenuItem("magic", "Magic",
          //console.log("MAGIC ACTIVATED!");
          $("div#test-div").html("MAGIC ACTIVATED");
          //Open magic menu
-         btMagicMenu.parent.visible = true;
-         btActionMenu.parent.visible = false;
-         btFrame.setActiveChild(btMagicMenu);
+         btFrame.setActiveMenu(btMagicMenu, true);
       },
       selected: function() {
          console.log("MAGIC SELECTED!");
@@ -238,9 +236,7 @@ btActionMenu.addChild(new MenuItem("item", "Item",
          console.log("ITEM ACTIVATED!");
          $("div#test-div").html("ITEM ACTIVATED");
          //Open item menu
-         btItemMenu.parent.visible = true;
-         btActionMenu.parent.visible = false;
-         btFrame.setActiveChild(btItemMenu);
+         btFrame.setActiveMenu(btItemMenu, true);
       },
       selected: function() {
          console.log("ITEM SELECTED!");
@@ -338,7 +334,7 @@ btItemFrame.addChild(btItemMenu);
 btFrame.addChild(btActionFrame);
 btFrame.addChild(btMagicFrame);
 btFrame.addChild(btItemFrame);
-btFrame.setActiveChild(btActionMenu);
+btFrame.setActiveMenu(btActionMenu);
 
 
 //<END RESOURCES>//
@@ -387,7 +383,7 @@ load(function () {
       },
       
       tick: function(t) {
-         var active = this.menu.getActiveChild();
+         var active = this.menu.getActiveMenu();
          if (key.up.down || key.w.down) {
             active.cursorUp();
             snd.pointerSound.pause();
@@ -427,7 +423,7 @@ load(function () {
       },
       
       tick: function(t) {
-         var active = this.menu.getActiveChild();
+         var active = this.menu.getActiveMenu();
          if (key.up.down || key.w.down) {
             active.cursorUp();
             snd.pointerSound.pause();

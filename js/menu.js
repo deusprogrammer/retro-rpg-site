@@ -15,6 +15,7 @@ function Frame(frameName, x, y, width, height) {
    this.parent      = null;
    this.children    = [];
    this.activeChild = null;
+   this.active      = false;
    
    this.artist      = null;
    
@@ -60,10 +61,26 @@ function Frame(frameName, x, y, width, height) {
       }
    };
    
+   this.setActiveChild = function(child) {
+      if (this.activeChild) {
+         this.activeChild.active = false;
+      }
+   
+      this.activeChild = child;
+      child.active = true;
+   }
+   
    this.draw = function() {
       var absolute = this.getOffset();
       var artist   = this.getArtist();
       
+      //If active and a menu, draw cursor
+      if (this.active && this.type == "menu") {
+         console.log("Draw cursor");
+         artist.drawSprite(this.cursorSprite, absolute.x + 10, absolute.y + (this.cursor * 20) + 13);
+      }
+      
+      //Draw frame or menu/menu items
       if (this.type == "frame") {
          artist.drawRectangle(absolute.x, absolute.y, this.width, this.height, this.border.color);
          artist.drawRectangle(absolute.x + this.border.width, absolute.y + this.border.width, this.width - (this.border.width * 2), this.height - (this.border.width * 2), this.background.color);
@@ -72,6 +89,7 @@ function Frame(frameName, x, y, width, height) {
          artist.drawText(absolute.x + this.padding.left, absolute.y + (this.index * 20) + this.padding.top, {size: "12px", family: "Georgia", color: "white"}, {h: "left", v: "middle"}, this.itemText);
       }
       
+      //Draw children
       for (var i = 0; i < this.children.length; i++) {
          this.children[i].draw();
       }
@@ -89,7 +107,7 @@ function Frame(frameName, x, y, width, height) {
    };
 }
 
-function Menu(menuName) {
+function Menu(menuName, cursorSprite) {
    this.elementName  = menuName;
    this.type         = "menu";
    this.x            = 0;
@@ -105,11 +123,13 @@ function Menu(menuName) {
    this.parent       = null;   
    this.children     = [];
    this.activeChild  = null;
+   this.active       = false;
    
    this.cursor       = 0;
    this.nChildren    = 0;
    
    this.artist       = null;
+   this.cursorSprite = cursorSprite;
    
    this.addChild = function(child) {
       child.parent = this;
@@ -152,10 +172,25 @@ function Menu(menuName) {
       }
    };
    
+   this.setActiveChild = function(child) {
+      if (this.activeChild) {
+         this.activeChild.active = false;
+      }
+   
+      this.activeChild = child;
+      child.active = true;
+   }
+   
    this.draw = function() {
       var absolute = this.getOffset();
       var artist   = this.getArtist();
       
+      //If active and a menu, draw cursor
+      if (this.active && this.type == "menu") {
+         artist.drawSprite(this.cursorSprite, absolute.x + 10, absolute.y + (this.cursor * 20) + 13);
+      }
+      
+      //Draw frame or menu/menu items
       if (this.type == "frame") {
          artist.drawRectangle(absolute.x, absolute.y, this.width, this.height, this.border.color);
          artist.drawRectangle(absolute.x + this.border.width, absolute.y + this.border.width, this.width - (this.border.width * 2), this.height - (this.border.width * 2), this.background.color);
@@ -164,6 +199,7 @@ function Menu(menuName) {
          artist.drawText(absolute.x + this.padding.left, absolute.y + (this.index * 20) + this.padding.top, {size: "12px", family: "Georgia", color: "white"}, {h: "left", v: "middle"}, this.itemText);
       }
       
+      //Draw children
       for (var i = 0; i < this.children.length; i++) {
          this.children[i].draw();
       }
@@ -224,6 +260,7 @@ function MenuItem(itemName, itemText, callback) {
    this.parent       = null;   
    this.children     = [];
    this.activeChild  = null;
+   this.active       = false;
    
    this.callback    = callback;
    this.index       = 0;
@@ -265,10 +302,26 @@ function MenuItem(itemName, itemText, callback) {
       }
    };
    
+   this.setActiveChild = function(child) {
+      if (this.activeChild) {
+         this.activeChild.active = false;
+      }
+   
+      this.activeChild = child;
+      child.active = true;
+   }
+   
    this.draw = function() {
       var absolute = this.getOffset();
       var artist   = this.getArtist();
       
+      //If active and a menu, draw cursor
+      if (this.active && this.type == "menu") {
+         console.log("Draw cursor");
+         artist.drawSprite(this.cursorSprite, absolute.x + 10, absolute.y + (this.cursor * 20) + 13);
+      }
+      
+      //Draw frame or menu/menu items
       if (this.type == "frame") {
          artist.drawRectangle(absolute.x, absolute.y, this.width, this.height, this.border.color);
          artist.drawRectangle(absolute.x + this.border.width, absolute.y + this.border.width, this.width - (this.border.width * 2), this.height - (this.border.width * 2), this.background.color);
@@ -277,6 +330,7 @@ function MenuItem(itemName, itemText, callback) {
          artist.drawText(absolute.x + this.padding.left, absolute.y + (this.index * 20) + this.padding.top, {size: "12px", family: "Georgia", color: "white"}, {h: "left", v: "middle"}, this.itemText);
       }
       
+      //Draw children
       for (var i = 0; i < this.children.length; i++) {
          this.children[i].draw();
       }

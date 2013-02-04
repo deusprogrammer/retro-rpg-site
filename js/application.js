@@ -15,7 +15,8 @@ function PropArtist () {
       draw.text(30 + x, 20 + y, text);
    };
    
-   this.drawImage = function() {
+   this.drawSprite = function(sprite, x, y) {
+      sprite.draw(x, y);
    };
 }
 
@@ -25,13 +26,31 @@ view.height = 480;
 view.width  = 640;
 loop.rate = 30;
 
+//Sprites
+spr.cursor           = new Sprite('assets/sprites/cursor.png', 1, 0, 0);
+spr.titleScreen      = new Sprite('assets/sprites/titlescreen.png', 1, 0, 0);
+
+//Music
+snd.titleMusic       = new Sound('assets/music/title.mp3');
+snd.preludeMusic     = new Sound('assets/music/prelude.mp3');
+//snd.narsheMusic      = new Sound('assets/music/narshe.mp3');
+//snd.battleMusic      = new Sound('assets/music/battle.mp3');
+//snd.fanfareMusic     = new Sound('assets/music/fanfare.mp3');
+snd.overworldMusic   = new Sound('assets/music/overworld.mp3');
+//snd.finalLevelMusic  = new Sound('assets/music/final.mp3');
+//snd.finalBattleMusic = new Sound('assets/music/finalBattle.mp3');
+
+//Sound effects
+snd.pointerSound     = new Sound('assets/sounds/pointer.mp3');
+snd.chimeSound       = new Sound('assets/sounds/chime.wav');
+
 //Menu
 var frame     = new Frame("master", 0, 0, 640, 480);
 var subFrame  = new Frame("rightFrame", frame.width - 110, 5, 100, 165);
 frame.addChild(subFrame);
 frame.artist = new PropArtist();
 
-var rightMenu = new Menu("rightMenu");
+var rightMenu = new Menu("rightMenu", spr.cursor);
 subFrame.border.color = "white";
 subFrame.border.width = 4;
 subFrame.addChild(rightMenu);
@@ -67,25 +86,7 @@ rightMenu.addChild(new MenuItem("save", "Save", function() {
    $("div#test-div").html("SAVE");
 }));
 
-frame.activeChild = rightMenu;
-
-//Sprites
-spr.cursor           = new Sprite('assets/sprites/cursor.png', 1, 0, 0);
-spr.titleScreen      = new Sprite('assets/sprites/titlescreen.png', 1, 0, 0);
-
-//Music
-snd.titleMusic       = new Sound('assets/music/title.mp3');
-snd.preludeMusic     = new Sound('assets/music/prelude.mp3');
-//snd.narsheMusic      = new Sound('assets/music/narshe.mp3');
-//snd.battleMusic      = new Sound('assets/music/battle.mp3');
-//snd.fanfareMusic     = new Sound('assets/music/fanfare.mp3');
-snd.overworldMusic   = new Sound('assets/music/overworld.mp3');
-//snd.finalLevelMusic  = new Sound('assets/music/final.mp3');
-//snd.finalBattleMusic = new Sound('assets/music/finalBattle.mp3');
-
-//Sound effects
-snd.pointerSound     = new Sound('assets/sounds/pointer.mp3');
-snd.chimeSound       = new Sound('assets/sounds/chime.wav');
+frame.setActiveChild(rightMenu);
 
 //After all resources are loaded
 load(function () {
@@ -118,7 +119,10 @@ load(function () {
       }
    };
    
-   obj.menuTest = {
+   obj.owMenu = {
+      //Overworld menu
+      menu: frame,
+      
       initialize: function(t) {
          snd.overworldMusic.currentTime = 0;
          snd.overworldMusic.play();
@@ -151,12 +155,7 @@ load(function () {
       },
       
       draw: function(t) {
-         //Draw frames and cursor
-         var active   = frame.getActiveChild();
-         var absolute = active.getOffset();
-         
-         frame.draw();
-         spr.cursor.draw(absolute.x + 10, absolute.y + (active.cursor * 20) + 13);
+         this.menu.draw();
       }      
    }
    
@@ -165,7 +164,7 @@ load(function () {
    }
    
    rm.menuTest = function() {
-      loop.register(obj.menuTest);
+      loop.register(obj.owMenu);
    }
    
    loop.active = true;

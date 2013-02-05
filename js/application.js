@@ -49,10 +49,10 @@ spr.titleScreen      = new Sprite('assets/sprites/titlescreen.png', 1, 0, 0);
 //--------------------------------------//
 snd.titleMusic       = new Sound('assets/music/title.mp3');
 snd.preludeMusic     = new Sound('assets/music/prelude.mp3');
-//snd.narsheMusic      = new Sound('assets/music/narshe.mp3');
 snd.battleMusic      = new Sound('assets/music/battle.mp3');
-//snd.fanfareMusic     = new Sound('assets/music/fanfare.mp3');
 snd.overworldMusic   = new Sound('assets/music/overworld.mp3');
+//snd.narsheMusic      = new Sound('assets/music/narshe.mp3');
+//snd.fanfareMusic     = new Sound('assets/music/fanfare.mp3');
 //snd.finalLevelMusic  = new Sound('assets/music/final.mp3');
 //snd.finalBattleMusic = new Sound('assets/music/finalBattle.mp3');
 

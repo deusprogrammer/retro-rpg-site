@@ -321,7 +321,12 @@ function Menu(menuName, cursorSprite) {
    };
    
    this.activateSelected = function() {
-      this.children[this.cursor].callback.activated();
+      if (link) {
+         this.getRoot().setActiveMenu(link, true);
+      }
+      else if (callback) {
+         this.children[this.cursor].callback.activated();
+      }
    };
    
    this.cursorUp = function() {
@@ -403,6 +408,7 @@ function MenuItem(itemName, itemText, callback) {
    this.visible     = true;
    
    this.callback    = callback;
+   this.link        = null;
    this.index       = 0;
    
    this.artist      = null;

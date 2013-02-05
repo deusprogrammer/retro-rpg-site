@@ -196,65 +196,6 @@ btItemFrame.border.color = "white";
 btItemFrame.border.width = 6;
 btItemFrame.visible = false;
 
-var btActionMenu = new Menu("btActionMenu", spr.cursor);
-btActionMenu.addChild(new MenuItem("attack", "Attack", 
-   {
-      activated: function() {
-         console.log("ATTACK ACTIVATED!");
-         $("div#test-div").html("ATTACK ACTIVATED");
-         //Switch to targeting
-      },
-      selected: function() {
-         console.log("ATTACK SELECTED!");
-         $("div#test-div").html("ATTACK SELECTED");
-      }
-   }
-));
-
-btActionMenu.addChild(new MenuItem("trance", "Trance", 
-   {
-      activated: function() {
-         console.log("TRANCE ACTIVATED!");
-         $("div#test-div").html("ATTACK ACTIVATED");
-         //Activate trance
-      },
-      selected: function() {
-         console.log("TRANCE SELECTED!");
-         $("div#test-div").html("ATTACK SELECTED");
-      }
-   }
-));
-
-btActionMenu.addChild(new MenuItem("magic", "Magic", 
-   {
-      activated: function() {
-         //console.log("MAGIC ACTIVATED!");
-         $("div#test-div").html("MAGIC ACTIVATED");
-         //Open magic menu
-         btFrame.setActiveMenu(btMagicMenu, true);
-      },
-      selected: function() {
-         console.log("MAGIC SELECTED!");
-         $("div#test-div").html("MAGIC SELECTED");
-      }
-   }
-));
-
-btActionMenu.addChild(new MenuItem("item", "Item", 
-   {
-      activated: function() {
-         console.log("ITEM ACTIVATED!");
-         $("div#test-div").html("ITEM ACTIVATED");
-         //Open item menu
-         btFrame.setActiveMenu(btItemMenu, true);
-      },
-      selected: function() {
-         console.log("ITEM SELECTED!");
-         $("div#test-div").html("ITEM SELECTED");
-      }
-   }
-));
-
 var btMagicMenu = new Menu("btMagicMenu", spr.cursor);
 
 btMagicMenu.addChild(new MenuItem("fire", "o Fire",
@@ -336,6 +277,67 @@ btItemMenu.addChild(new MenuItem("megaElixir", "o Mega Elixir",
       }
    }
 ));
+
+var btActionMenu = new Menu("btActionMenu", spr.cursor);
+btActionMenu.addChild(new MenuItem("attack", "Attack", 
+   {
+      activated: function() {
+         console.log("ATTACK ACTIVATED!");
+         $("div#test-div").html("ATTACK ACTIVATED");
+         //Switch to targeting
+      },
+      selected: function() {
+         console.log("ATTACK SELECTED!");
+         $("div#test-div").html("ATTACK SELECTED");
+      }
+   }
+));
+
+btActionMenu.addChild(new MenuItem("trance", "Trance", 
+   {
+      activated: function() {
+         console.log("TRANCE ACTIVATED!");
+         $("div#test-div").html("ATTACK ACTIVATED");
+         //Activate trance
+      },
+      selected: function() {
+         console.log("TRANCE SELECTED!");
+         $("div#test-div").html("ATTACK SELECTED");
+      }
+   }
+));
+
+//Element with a link to another menu
+var item = new MenuItem("magic", "Magic", 
+   {
+      activated: function() {
+         //btFrame.setActiveMenu(btMagicMenu, true);
+      },
+      selected: function() {
+         console.log("MAGIC SELECTED!");
+         $("div#test-div").html("MAGIC SELECTED");
+      }
+   }
+);
+
+item.link = btMagicMenu;
+btActionMenu.addChild(item);
+
+//Element with a link to another menu
+item = new MenuItem("item", "Item", 
+   {
+      activated: function() {
+         //btFrame.setActiveMenu(btItemMenu, true);
+      },
+      selected: function() {
+         console.log("ITEM SELECTED!");
+         $("div#test-div").html("ITEM SELECTED");
+      }
+   }
+);
+
+item.link = btItemMenu;
+btActionMenu.addChild(item);
 
 btActionFrame.addChild(btActionMenu);
 btMagicFrame.addChild(btMagicMenu);

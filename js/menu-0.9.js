@@ -321,10 +321,11 @@ function Menu(menuName, cursorSprite) {
    };
    
    this.activateSelected = function() {
+      var link = this.children[this.cursor].link
       if (link) {
          this.getRoot().setActiveMenu(link, true);
       }
-      else if (callback) {
+      else if (this.children[this.cursor].callback) {
          this.children[this.cursor].callback.activated();
       }
    };

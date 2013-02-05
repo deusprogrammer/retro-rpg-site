@@ -26,6 +26,16 @@ view.height = 480;
 view.width  = 640;
 loop.rate = 30;
 
+//Loading text
+draw.font = 'normal normal normal 20px Georgia';
+draw.color = 'black';
+draw.textHalign = 'center';
+draw.textValign = 'middle';
+draw.text(300, 300, "The HTML Within");
+
+draw.font = 'normal normal normal 10px Georgia';
+draw.text(300, 320, "Loading.  Please wait...");
+
 //<START RESOURCES>//
 
 //--------------------------------------//

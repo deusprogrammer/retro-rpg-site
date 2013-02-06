@@ -174,181 +174,6 @@ owRightMenu.addChild(new MenuItem("save", "Save",
 
 owFrame.setActiveMenu(owRightMenu);
 
-//***************
-// Battle Menu
-//***************
-var btFrame   = new Frame("btFrame", 0, 330, 640, 150);
-btFrame.border.color = "white";
-btFrame.border.width = 10;
-btFrame.artist = new PropArtist();
-
-var btActionFrame = new Frame("btActionFrame", 200, 11, 100, 128);
-btActionFrame.border.color = "white";
-btActionFrame.border.width = 6;
-
-var btMagicFrame = new Frame("btMagicFrame", 200, 11, 200, 128);
-btMagicFrame.border.color = "white";
-btMagicFrame.border.width = 6;
-btMagicFrame.visible = false;
-
-var btItemFrame = new Frame("btItemFrame", 200, 11, 200, 128);
-btItemFrame.border.color = "white";
-btItemFrame.border.width = 6;
-btItemFrame.visible = false;
-
-var btMagicMenu = new Menu("btMagicMenu", spr.cursor);
-
-btMagicMenu.addChild(new MenuItem("fire", "o Fire",
-   {
-      activated: function() {
-         console.log("FIRE ACTIVATED!");
-         $("div#test-div").html("FIRE ACTIVATED");
-      },
-      selected: function() {
-         console.log("FIRE SELECTED!");
-         $("div#test-div").html("FIRE SELECTED");
-      }
-   }
-));
-
-btMagicMenu.addChild(new MenuItem("fira", "o Fira",
-   {
-      activated: function() {
-         console.log("FIRA ACTIVATED!");
-         $("div#test-div").html("FIRA ACTIVATED");
-      },
-      selected: function() {
-         console.log("FIRA SELECTED!");
-         $("div#test-div").html("FIRA SELECTED");
-      }
-   }
-));
-
-btMagicMenu.addChild(new MenuItem("firaga", "o Firaga",
-   {
-      activated: function() {
-         console.log("FIRAGA ACTIVATED!");
-         $("div#test-div").html("FIRAGA ACTIVATED");
-      },
-      selected: function() {
-         console.log("FIRAGA SELECTED!");
-         $("div#test-div").html("FIRAGA SELECTED");
-      }
-   }
-));
-
-var btItemMenu = new Menu("btItemMenu", spr.cursor);
-
-btItemMenu.addChild(new MenuItem("tonic", "o Tonic",
-   {
-      activated: function() {
-         console.log("TONIC ACTIVATED!");
-         $("div#test-div").html("TONIC ACTIVATED");
-      },
-      selected: function() {
-         console.log("TONIC SELECTED!");
-         $("div#test-div").html("TONIC SELECTED");
-      }
-   }
-));
-
-btItemMenu.addChild(new MenuItem("elixir", "o Elixir",
-   {
-      activated: function() {
-         console.log("ELIXIR ACTIVATED!");
-         $("div#test-div").html("ELIXIR ACTIVATED");
-      },
-      selected: function() {
-         console.log("ELIXIR SELECTED!");
-         $("div#test-div").html("ELIXIR SELECTED");
-      }
-   }
-));
-
-btItemMenu.addChild(new MenuItem("megaElixir", "o Mega Elixir",
-   {
-      activated: function() {
-         console.log("MEGA ELIXIR ACTIVATED!");
-         $("div#test-div").html("MEGA ELIXIR ACTIVATED");
-      },
-      selected: function() {
-         console.log("MEGA ELIXIR SELECTED!");
-         $("div#test-div").html("MEGA ELIXIR SELECTED");
-      }
-   }
-));
-
-var btActionMenu = new Menu("btActionMenu", spr.cursor);
-btActionMenu.addChild(new MenuItem("attack", "Attack", 
-   {
-      activated: function() {
-         console.log("ATTACK ACTIVATED!");
-         $("div#test-div").html("ATTACK ACTIVATED");
-         //Switch to targeting
-      },
-      selected: function() {
-         console.log("ATTACK SELECTED!");
-         $("div#test-div").html("ATTACK SELECTED");
-      }
-   }
-));
-
-btActionMenu.addChild(new MenuItem("trance", "Trance", 
-   {
-      activated: function() {
-         console.log("TRANCE ACTIVATED!");
-         $("div#test-div").html("ATTACK ACTIVATED");
-         //Activate trance
-      },
-      selected: function() {
-         console.log("TRANCE SELECTED!");
-         $("div#test-div").html("ATTACK SELECTED");
-      }
-   }
-));
-
-//Element with a link to another menu
-var item = new MenuItem("magic", "Magic", 
-   {
-      activated: function() {
-         //btFrame.setActiveMenu(btMagicMenu, true);
-      },
-      selected: function() {
-         console.log("MAGIC SELECTED!");
-         $("div#test-div").html("MAGIC SELECTED");
-      }
-   }
-);
-
-item.link = btMagicMenu;
-btActionMenu.addChild(item);
-
-//Element with a link to another menu
-item = new MenuItem("item", "Item", 
-   {
-      activated: function() {
-         //btFrame.setActiveMenu(btItemMenu, true);
-      },
-      selected: function() {
-         console.log("ITEM SELECTED!");
-         $("div#test-div").html("ITEM SELECTED");
-      }
-   }
-);
-
-item.link = btItemMenu;
-btActionMenu.addChild(item);
-
-btActionFrame.addChild(btActionMenu);
-btMagicFrame.addChild(btMagicMenu);
-btItemFrame.addChild(btItemMenu);
-
-btFrame.addChild(btActionFrame);
-btFrame.addChild(btMagicFrame);
-btFrame.addChild(btItemFrame);
-btFrame.setActiveMenu(btActionMenu);
-
-
 //<END RESOURCES>//
 
 //After all resources are loaded
@@ -425,17 +250,18 @@ load(function () {
       }      
    }
    
-   obj.btMenu = {
+   obj.battle = {
       //Overworld menu
-      menu: btFrame,
+      battleScreen: new BattleScreen([], [], spr.cursor, new PropArtist()),
       
       initialize: function(t) {
          snd.battleMusic.currentTime = 0;
          snd.battleMusic.play();
+         this.battleScreen.state = "menu";
       },
       
       tick: function(t) {
-         var active = this.menu.getActiveMenu();
+         var active = this.battleScreen.getActiveMenu();
          if (key.up.down || key.w.down) {
             active.cursorUp();
             snd.pointerSound.pause();
@@ -475,8 +301,10 @@ load(function () {
       },
       
       draw: function(t) {
+         //Fill screen with black
          draw.rectangle(0, 0, view.width, view.height, false, "black");
-         this.menu.draw();
+         
+         this.battleScreen.draw();
       }      
    }
    
@@ -489,7 +317,7 @@ load(function () {
    }
    
    rm.battleTest = function() {
-      loop.register(obj.btMenu);
+      loop.register(obj.battle);
    }
    
    loop.active = true;
